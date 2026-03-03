@@ -1,0 +1,37 @@
+@import "tailwindcss";
+
+@theme {
+  --color-osl-charcoal: #4a4a4a;
+  --color-osl-navy: #6b705c; /* Muted Sage/Olive */
+  --color-osl-beige: #fefae0; /* Warm Cream */
+  --color-osl-orange: #ddbea9; /* Soft Terracotta/Sand */
+  --color-osl-accent: #cb997e; /* Deeper Sand */
+  
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  body {
+    @apply bg-osl-beige text-osl-charcoal font-sans antialiased;
+  }
+}
+
+.section-padding {
+  @apply py-24 px-6 md:px-12 lg:px-24;
+}
+
+.heading-lg {
+  @apply text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight text-osl-navy;
+}
+
+.heading-md {
+  @apply text-3xl md:text-4xl font-semibold text-osl-navy;
+}
+
+.text-muted {
+  @apply text-osl-charcoal/60;
+}
+
+.bg-soft-gradient {
+  background: linear-gradient(135deg, #fefae0 0%, #faedcd 100%);
+}
