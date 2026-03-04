@@ -1,6 +1,6 @@
 import { useLanguage } from "../context/LanguageContext";
 
-export default function Footer() {
+export default function Footer({ onAdminClick }: { onAdminClick: () => void }) {
   const { t } = useLanguage();
   
   return (
@@ -30,6 +30,12 @@ export default function Footer() {
             </div>
           </div>
           <p className="text-xs text-muted">{t('footer.rights')}</p>
+          <button 
+            onClick={onAdminClick}
+            className="text-[10px] text-osl-navy/20 hover:text-osl-navy transition-colors mt-2 uppercase tracking-widest font-bold"
+          >
+            Admin
+          </button>
         </div>
         
         <div className="flex gap-8 text-xs font-bold uppercase tracking-widest text-osl-navy">

@@ -1,22 +1,33 @@
+import { useState, useEffect } from "react";
 import { motion } from "motion/react";
 import { ArrowRight } from "lucide-react";
 import { useLanguage } from "../context/LanguageContext";
 
 export default function Hero() {
   const { t } = useLanguage();
+  const [videoUrl, setVideoUrl] = useState("https://videos.pexels.com/video-files/6460113/6460113-hd_1920_1080_25fps.mp4");
+
+  useEffect(() => {
+    const saved = localStorage.getItem("osl_general_assets");
+    if (saved) {
+      const assets = JSON.parse(saved);
+      if (assets.heroVideo) setVideoUrl(assets.heroVideo);
+    }
+  }, []);
   
   return (
     <section id="home" className="relative h-screen flex items-center overflow-hidden bg-osl-beige">
       {/* Single Background Video for a cleaner, more impactful look */}
       <div className="absolute inset-0 z-0">
         <video
+          key={videoUrl} // Force re-render when URL changes
           autoPlay
           loop
           muted
           playsInline
           className="w-full h-full object-cover opacity-80"
         >
-          <source src="https://videos.pexels.com/video-files/6460113/6460113-hd_1920_1080_25fps.mp4" type="video/mp4" />
+          <source src={videoUrl} type="video/mp4" />
         </video>
         {/* Subtle darkening for better text contrast */}
         <div className="absolute inset-0 bg-black/40" />

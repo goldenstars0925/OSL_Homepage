@@ -1,31 +1,46 @@
+import { useState, useEffect } from "react";
 import { motion } from "motion/react";
 import { useLanguage } from "../context/LanguageContext";
 
+interface NetworkNode {
+  title: string;
+  image: string;
+  pos: string;
+}
+
 export default function Network() {
   const { t } = useLanguage();
-  
-  const nodes = [
-    { 
-      title: t('net.factories'), 
-      image: "https://images.unsplash.com/photo-1741176505800-caaa3a52631a?w=600&auto=format&fit=crop&q=60",
-      pos: "top-0 left-1/2 -translate-x-1/2 -translate-y-1/2"
-    },
-    { 
-      title: t('net.mills'), 
-      image: "https://images.unsplash.com/photo-1660980041852-230420b8f99f?w=600&auto=format&fit=crop&q=60",
-      pos: "right-0 top-1/2 translate-x-1/2 -translate-y-1/2"
-    },
-    { 
-      title: t('net.suppliers'), 
-      image: "https://images.pexels.com/photos/4614233/pexels-photo-4614233.jpeg",
-      pos: "bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2"
-    },
-    { 
-      title: t('net.logistics'), 
-      image: "https://images.pexels.com/photos/2199293/pexels-photo-2199293.jpeg",
-      pos: "left-0 top-1/2 -translate-x-1/2 -translate-y-1/2"
-    },
-  ];
+  const [nodes, setNodes] = useState<NetworkNode[]>([]);
+
+  useEffect(() => {
+    const saved = localStorage.getItem("osl_network_nodes");
+    if (saved) {
+      setNodes(JSON.parse(saved));
+    } else {
+      setNodes([
+        { 
+          title: t('net.factories'), 
+          image: "https://images.unsplash.com/photo-1741176505800-caaa3a52631a?w=600&auto=format&fit=crop&q=60",
+          pos: "top-0 left-1/2 -translate-x-1/2 -translate-y-1/2"
+        },
+        { 
+          title: t('net.mills'), 
+          image: "https://images.unsplash.com/photo-1660980041852-230420b8f99f?w=600&auto=format&fit=crop&q=60",
+          pos: "right-0 top-1/2 translate-x-1/2 -translate-y-1/2"
+        },
+        { 
+          title: t('net.suppliers'), 
+          image: "https://images.pexels.com/photos/4614233/pexels-photo-4614233.jpeg",
+          pos: "bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2"
+        },
+        { 
+          title: t('net.logistics'), 
+          image: "https://images.pexels.com/photos/2199293/pexels-photo-2199293.jpeg",
+          pos: "left-0 top-1/2 -translate-x-1/2 -translate-y-1/2"
+        },
+      ]);
+    }
+  }, [t]);
 
   return (
     <section id="network" className="section-padding bg-white overflow-hidden">

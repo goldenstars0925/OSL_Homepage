@@ -1,9 +1,26 @@
+import { useState, useEffect } from "react";
 import { motion } from "motion/react";
 import { ShieldCheck, Search, CheckCircle2 } from "lucide-react";
 import { useLanguage } from "../context/LanguageContext";
 
 export default function Quality() {
   const { t } = useLanguage();
+  const [images, setImages] = useState([
+    "https://images.unsplash.com/photo-1673201230274-c4dbd20c3f79?w=600&auto=format&fit=crop&q=60",
+    "https://plus.unsplash.com/premium_photo-1765841918701-79a877196f29?w=600&auto=format&fit=crop&q=60",
+    "https://plus.unsplash.com/premium_photo-1677695578759-5ae6ed633d75?w=600&auto=format&fit=crop&q=60",
+    "https://plus.unsplash.com/premium_photo-1664303810352-447468aa3266?w=600&auto=format&fit=crop&q=60"
+  ]);
+
+  useEffect(() => {
+    const saved = localStorage.getItem("osl_general_assets");
+    if (saved) {
+      const assets = JSON.parse(saved);
+      if (assets.qualityImages && assets.qualityImages.length === 4) {
+        setImages(assets.qualityImages);
+      }
+    }
+  }, []);
   
   const steps = [
     {
@@ -62,12 +79,12 @@ export default function Quality() {
             className="grid grid-cols-2 gap-6"
           >
             <div className="space-y-6">
-              <img src="https://images.unsplash.com/photo-1673201230274-c4dbd20c3f79?w=600&auto=format&fit=crop&q=60" className="rounded-3xl w-full object-cover h-64 shadow-2xl" referrerPolicy="no-referrer" />
-              <img src="https://plus.unsplash.com/premium_photo-1765841918701-79a877196f29?w=600&auto=format&fit=crop&q=60" className="rounded-3xl w-full object-cover h-40 shadow-2xl" referrerPolicy="no-referrer" />
+              <img src={images[0]} className="rounded-3xl w-full object-cover h-64 shadow-2xl" referrerPolicy="no-referrer" />
+              <img src={images[1]} className="rounded-3xl w-full object-cover h-40 shadow-2xl" referrerPolicy="no-referrer" />
             </div>
             <div className="space-y-6 pt-12">
-              <img src="https://plus.unsplash.com/premium_photo-1677695578759-5ae6ed633d75?w=600&auto=format&fit=crop&q=60" className="rounded-3xl w-full object-cover h-40 shadow-2xl" referrerPolicy="no-referrer" />
-              <img src="https://plus.unsplash.com/premium_photo-1664303810352-447468aa3266?w=600&auto=format&fit=crop&q=60" className="rounded-3xl w-full object-cover h-64 shadow-2xl" referrerPolicy="no-referrer" />
+              <img src={images[2]} className="rounded-3xl w-full object-cover h-40 shadow-2xl" referrerPolicy="no-referrer" />
+              <img src={images[3]} className="rounded-3xl w-full object-cover h-64 shadow-2xl" referrerPolicy="no-referrer" />
             </div>
           </motion.div>
         </div>

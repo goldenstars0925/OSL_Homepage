@@ -1,31 +1,47 @@
+import { useState, useEffect } from "react";
 import { motion } from "motion/react";
 import { useLanguage } from "../context/LanguageContext";
 
+interface CapabilityItem {
+  category: string;
+  items: string[];
+  image: string;
+}
+
 export default function Capability() {
   const { t } = useLanguage();
-  
-  const capabilities = [
-    {
-      category: t('cap.knit'),
-      items: ["Jersey", "Fleece", "Rib", "Activewear", "Loungewear"],
-      image: "https://images.pexels.com/photos/6373302/pexels-photo-6373302.jpeg"
-    },
-    {
-      category: t('cap.woven'),
-      items: ["Shirts", "Pants", "Outerwear", "Workwear", "Technical garments"],
-      image: "https://images.pexels.com/photos/6616675/pexels-photo-6616675.jpeg"
-    },
-    {
-      category: t('cap.print'),
-      items: ["Screen Print", "Digital Print", "Sublimation", "Embroidery"],
-      image: "https://images.unsplash.com/photo-1663433541063-ddab084d1126?w=600&auto=format&fit=crop&q=60"
-    },
-    {
-      category: t('cap.washing'),
-      items: ["Garment Wash", "Enzyme Wash", "Stone Wash", "Bleach Wash", "Softener Wash"],
-      image: "https://plus.unsplash.com/premium_photo-1755534537396-fa433624ca2f?w=600&auto=format&fit=crop&q=60"
+  const [capabilities, setCapabilities] = useState<CapabilityItem[]>([]);
+
+  useEffect(() => {
+    const saved = localStorage.getItem("osl_capabilities");
+    if (saved) {
+      setCapabilities(JSON.parse(saved));
+    } else {
+      // Default data if none saved
+      setCapabilities([
+        {
+          category: t('cap.knit'),
+          items: ["Jersey", "Fleece", "Rib", "Activewear", "Loungewear"],
+          image: "https://images.pexels.com/photos/6373302/pexels-photo-6373302.jpeg"
+        },
+        {
+          category: t('cap.woven'),
+          items: ["Shirts", "Pants", "Outerwear", "Workwear", "Technical garments"],
+          image: "https://images.pexels.com/photos/6616675/pexels-photo-6616675.jpeg"
+        },
+        {
+          category: t('cap.print'),
+          items: ["Screen Print", "Digital Print", "Sublimation", "Embroidery"],
+          image: "https://images.unsplash.com/photo-1663433541063-ddab084d1126?w=600&auto=format&fit=crop&q=60"
+        },
+        {
+          category: t('cap.washing'),
+          items: ["Garment Wash", "Enzyme Wash", "Stone Wash", "Bleach Wash", "Softener Wash"],
+          image: "https://plus.unsplash.com/premium_photo-1755534537396-fa433624ca2f?w=600&auto=format&fit=crop&q=60"
+        }
+      ]);
     }
-  ];
+  }, [t]);
 
   return (
     <section id="capability" className="section-padding bg-white">
@@ -53,7 +69,7 @@ export default function Capability() {
                 <img
                   src={cap.image}
                   alt={cap.category}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                  className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
                   referrerPolicy="no-referrer"
                 />
               </div>

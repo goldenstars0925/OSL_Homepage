@@ -1,8 +1,18 @@
+import { useState, useEffect } from "react";
 import { motion } from "motion/react";
 import { useLanguage } from "../context/LanguageContext";
 
 export default function About() {
   const { t } = useLanguage();
+  const [imageUrl, setImageUrl] = useState("https://images.pexels.com/photos/4614195/pexels-photo-4614195.jpeg");
+
+  useEffect(() => {
+    const saved = localStorage.getItem("osl_general_assets");
+    if (saved) {
+      const assets = JSON.parse(saved);
+      if (assets.aboutImage) setImageUrl(assets.aboutImage);
+    }
+  }, []);
   
   return (
     <section id="about" className="section-padding bg-white">
@@ -20,7 +30,7 @@ export default function About() {
             <p className="text-lg text-muted leading-relaxed mb-10">
               {t('about.description2')}
             </p>
-
+ 
             <div className="grid grid-cols-2 gap-8">
               <div>
                 <h4 className="font-bold text-osl-navy mb-2">{t('about.mission')}</h4>
@@ -32,7 +42,7 @@ export default function About() {
               </div>
             </div>
           </motion.div>
-
+ 
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
@@ -41,7 +51,7 @@ export default function About() {
           >
             <div className="aspect-[4/5] rounded-2xl overflow-hidden shadow-2xl">
               <img
-                src="https://images.pexels.com/photos/4614195/pexels-photo-4614195.jpeg"
+                src={imageUrl}
                 alt="OSL Tailoring Details"
                 className="w-full h-full object-cover"
                 referrerPolicy="no-referrer"
