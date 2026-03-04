@@ -24,10 +24,18 @@ interface LanguageProviderProps {
 
 export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) => {
   const [language, setLanguage] = useState<Language>('en');
+  const [customTranslations, setCustomTranslations] = useState<Record<Language, Record<string, string>>>(translations);
+
+  React.useEffect(() => {
+    const saved = localStorage.getItem('osl_translations');
+    if (saved) {
+      setCustomTranslations(JSON.parse(saved));
+    }
+  }, []);
 
   // Simple translation helper
   const t = (key: string) => {
-    return translations[language][key] || key;
+    return customTranslations[language][key] || translations[language][key] || key;
   };
 
   return (

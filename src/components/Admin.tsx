@@ -1,6 +1,7 @@
 import { useState, useEffect, FormEvent } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { X, Save, Plus, Trash2, LogOut, Lock, LayoutGrid, Share2, Image as ImageIcon } from "lucide-react";
+import { X, Save, Plus, Trash2, LogOut, Lock, LayoutGrid, Share2, Image as ImageIcon, Type } from "lucide-react";
+import { translations } from "../context/LanguageContext";
 
 interface CapabilityItem {
   category: string;
@@ -80,10 +81,11 @@ const DEFAULT_GENERAL: GeneralAssets = {
 export default function Admin({ onClose }: { onClose: () => void }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState("");
-  const [activeTab, setActiveTab] = useState<'capability' | 'network' | 'general'>('capability');
+  const [activeTab, setActiveTab] = useState<'capability' | 'network' | 'general' | 'content'>('capability');
   const [capabilities, setCapabilities] = useState<CapabilityItem[]>([]);
   const [networkNodes, setNetworkNodes] = useState<NetworkNode[]>([]);
   const [generalAssets, setGeneralAssets] = useState<GeneralAssets>(DEFAULT_GENERAL);
+  const [customTranslations, setCustomTranslations] = useState(translations);
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -97,6 +99,9 @@ export default function Admin({ onClose }: { onClose: () => void }) {
 
     const savedGen = localStorage.getItem("osl_general_assets");
     if (savedGen) setGeneralAssets(JSON.parse(savedGen));
+
+    const savedTrans = localStorage.getItem("osl_translations");
+    if (savedTrans) setCustomTranslations(JSON.parse(savedTrans));
   }, []);
 
   const handleLogin = (e: FormEvent) => {
@@ -113,6 +118,7 @@ export default function Admin({ onClose }: { onClose: () => void }) {
     localStorage.setItem("osl_capabilities", JSON.stringify(capabilities));
     localStorage.setItem("osl_network_nodes", JSON.stringify(networkNodes));
     localStorage.setItem("osl_general_assets", JSON.stringify(generalAssets));
+    localStorage.setItem("osl_translations", JSON.stringify(customTranslations));
     alert("All changes saved successfully!");
     window.location.reload();
   };
@@ -161,6 +167,16 @@ export default function Admin({ onClose }: { onClose: () => void }) {
     } else {
       setGeneralAssets({ ...generalAssets, [key]: val });
     }
+  };
+
+  const updateTranslation = (lang: 'en' | 'ko', key: string, val: string) => {
+    setCustomTranslations({
+      ...customTranslations,
+      [lang]: {
+        ...customTranslations[lang],
+        [key]: val
+      }
+    });
   };
 
   const handleFileUpload = (idx: number, file: File, type: 'capability' | 'network' | 'general', genKey?: keyof GeneralAssets) => {
@@ -240,6 +256,12 @@ export default function Admin({ onClose }: { onClose: () => void }) {
                 className={`px-4 py-2 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all flex items-center gap-2 ${activeTab === 'general' ? 'bg-osl-navy text-white' : 'bg-white text-osl-navy/40 hover:bg-osl-navy/5'}`}
               >
                 <ImageIcon size={14} /> General
+              </button>
+              <button 
+                onClick={() => setActiveTab('content')}
+                className={`px-4 py-2 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all flex items-center gap-2 ${activeTab === 'content' ? 'bg-osl-navy text-white' : 'bg-white text-osl-navy/40 hover:bg-osl-navy/5'}`}
+              >
+                <Type size={14} /> Content
               </button>
             </div>
           </div>
@@ -369,7 +391,7 @@ export default function Admin({ onClose }: { onClose: () => void }) {
               ))}
               <p className="text-center text-[10px] text-muted uppercase tracking-widest italic">Note: Network layout positions are fixed to maintain the map structure.</p>
             </motion.div>
-          ) : (
+          ) : activeTab === 'general' ? (
             <motion.div 
               key="general"
               initial={{ opacity: 0, x: -20 }}
@@ -464,6 +486,52 @@ export default function Admin({ onClose }: { onClose: () => void }) {
                       </div>
                     </div>
                   ))}
+                </div>
+              </div>
+            </motion.div>
+          ) : (
+            <motion.div 
+              key="content"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 20 }}
+              className="space-y-12"
+            >
+              <div className="grid md:grid-cols-2 gap-12">
+                {/* English Content */}
+                <div className="space-y-6">
+                  <h3 className="text-xl font-bold text-osl-navy border-b pb-4">English Content</h3>
+                  <div className="space-y-6">
+                    {Object.keys(translations.en).map(key => (
+                      <div key={key} className="space-y-2">
+                        <label className="text-[10px] font-bold uppercase tracking-widest text-osl-navy/40 ml-2">{key}</label>
+                        <textarea 
+                          rows={2}
+                          value={customTranslations.en[key] || ""}
+                          onChange={(e) => updateTranslation('en', key, e.target.value)}
+                          className="w-full px-4 py-3 rounded-xl bg-white border border-osl-navy/5 focus:border-osl-accent outline-none transition-colors text-sm"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Korean Content */}
+                <div className="space-y-6">
+                  <h3 className="text-xl font-bold text-osl-navy border-b pb-4">Korean Content</h3>
+                  <div className="space-y-6">
+                    {Object.keys(translations.ko).map(key => (
+                      <div key={key} className="space-y-2">
+                        <label className="text-[10px] font-bold uppercase tracking-widest text-osl-navy/40 ml-2">{key}</label>
+                        <textarea 
+                          rows={2}
+                          value={customTranslations.ko[key] || ""}
+                          onChange={(e) => updateTranslation('ko', key, e.target.value)}
+                          className="w-full px-4 py-3 rounded-xl bg-white border border-osl-navy/5 focus:border-osl-accent outline-none transition-colors text-sm"
+                        />
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             </motion.div>
